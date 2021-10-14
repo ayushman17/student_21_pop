@@ -241,7 +241,7 @@ func (h *Hub) handleMessageFromClient(incomingMessage *socket.IncomingMessage) {
 	case query.MethodPublish:
 		id, handlerErr = h.handlePublish(socket, byteMessage)
 	case query.MethodSubscribe:
-		id, handlerErr = h.handleSubscribe(socket, byteMessage)
+		id, handlerErr = h.handleSubscribe(socket, byteMessage, hub.Client)
 	case query.MethodUnsubscribe:
 		id, handlerErr = h.handleUnsubscribe(socket, byteMessage)
 	case query.MethodCatchUp:
@@ -294,7 +294,7 @@ func (h *Hub) handlePublish(socket socket.Socket, byteMessage []byte) (int, erro
 	return publish.ID, nil
 }
 
-func (h *Hub) handleSubscribe(socket socket.Socket, byteMessage []byte) (int, error) {
+func (h *Hub) handleSubscribe(socket socket.Socket, byteMessage []byte, senderType hub.SenderType) (int, error) {
 	var subscribe method.Subscribe
 
 	err := json.Unmarshal(byteMessage, &subscribe)
@@ -307,7 +307,7 @@ func (h *Hub) handleSubscribe(socket socket.Socket, byteMessage []byte) (int, er
 		return -1, xerrors.Errorf("failed to get subscribe channel: %v", err)
 	}
 
-	err = channel.Subscribe(socket, subscribe)
+	err = channel.Subscribe(socket, subscribe, senderType)
 	if err != nil {
 		return -1, xerrors.Errorf("failed to publish: %v", err)
 	}
@@ -418,7 +418,7 @@ func (h *Hub) handleMessageFromWitness(incomingMessage *socket.IncomingMessage) 
 	case query.MethodPublish:
 		id, handlerErr = h.handlePublish(socket, byteMessage)
 	case query.MethodSubscribe:
-		id, handlerErr = h.handleSubscribe(socket, byteMessage)
+		id, handlerErr = h.handleSubscribe(socket, byteMessage, hub.Witness)
 	case query.MethodUnsubscribe:
 		id, handlerErr = h.handleUnsubscribe(socket, byteMessage)
 	case query.MethodCatchUp:

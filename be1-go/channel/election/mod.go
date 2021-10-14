@@ -3,11 +3,10 @@ package election
 import (
 	"encoding/base64"
 	"encoding/json"
-	"github.com/rs/zerolog"
-	"golang.org/x/xerrors"
 	"popstellar/channel"
 	"popstellar/channel/inbox"
 	"popstellar/crypto"
+	"popstellar/hub"
 	jsonrpc "popstellar/message"
 	"popstellar/message/answer"
 	"popstellar/message/messagedata"
@@ -18,9 +17,12 @@ import (
 	"popstellar/validation"
 	"strconv"
 	"sync"
+
+	"github.com/rs/zerolog"
+	"golang.org/x/xerrors"
 )
 
-const msgID		 = "msg id"
+const msgID = "msg id"
 
 // attendees represents the attendees in an election.
 type attendees struct {
@@ -204,7 +206,7 @@ func (c *Channel) Publish(publish method.Publish) error {
 }
 
 // Subscribe is used to handle a subscribe message from the client.
-func (c *Channel) Subscribe(socket socket.Socket, msg method.Subscribe) error {
+func (c *Channel) Subscribe(socket socket.Socket, msg method.Subscribe, sender hub.SenderType) error {
 	c.log.Info().
 		Str(msgID, strconv.Itoa(msg.ID)).
 		Msg("received a subscribe")

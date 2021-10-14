@@ -11,6 +11,7 @@ import (
 	"popstellar/channel/inbox"
 	"popstellar/crypto"
 	"popstellar/db/sqlite"
+	"popstellar/hub"
 	jsonrpc "popstellar/message"
 	"popstellar/message/answer"
 	"popstellar/message/messagedata"
@@ -84,7 +85,7 @@ func NewChannel(channelID string, hub channel.HubFunctionalities, msg message.Me
 }
 
 // Subscribe is used to handle a subscribe message from the client.
-func (c *Channel) Subscribe(socket socket.Socket, msg method.Subscribe) error {
+func (c *Channel) Subscribe(socket socket.Socket, msg method.Subscribe, sender hub.SenderType) error {
 	c.log.Info().
 		Str(msgID, strconv.Itoa(msg.ID)).
 		Msg("received a subscribe")

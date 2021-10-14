@@ -8,6 +8,7 @@ import (
 	"io"
 	"popstellar/channel"
 	"popstellar/crypto"
+	"popstellar/hub"
 	jsonrpc "popstellar/message"
 	"popstellar/message/messagedata"
 	"popstellar/message/query"
@@ -394,7 +395,7 @@ type fakeChannel struct {
 }
 
 // Subscribe implements channel.Channel
-func (f *fakeChannel) Subscribe(socket socket.Socket, msg method.Subscribe) error {
+func (f *fakeChannel) Subscribe(socket socket.Socket, msg method.Subscribe, sender hub.SenderType) error {
 	f.socket = socket
 	f.subscribe = msg
 	return nil

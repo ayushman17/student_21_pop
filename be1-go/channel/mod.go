@@ -1,12 +1,14 @@
 package channel
 
 import (
-	"github.com/rs/zerolog"
+	"popstellar/hub"
 	"popstellar/message/query/method"
 	"popstellar/message/query/method/message"
 	"popstellar/network/socket"
 	"popstellar/validation"
 	"sync"
+
+	"github.com/rs/zerolog"
 
 	"go.dedis.ch/kyber/v3"
 )
@@ -18,7 +20,7 @@ type LaoFactory func(channelID string, hub HubFunctionalities, msg message.Messa
 // Channel represents a PoP channel - like a LAO.
 type Channel interface {
 	// Subscribe is used to handle a subscribe message.
-	Subscribe(socket socket.Socket, msg method.Subscribe) error
+	Subscribe(socket socket.Socket, msg method.Subscribe, sender hub.SenderType) error
 
 	// Unsubscribe is used to handle an unsubscribe message.
 	Unsubscribe(socketID string, msg method.Unsubscribe) error

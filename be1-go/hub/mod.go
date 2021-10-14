@@ -20,6 +20,14 @@ const (
 	WitnessHubType HubType = "witness"
 )
 
+type SenderType string
+
+const (
+	Organizer SenderType = "organizer"
+	Witness   SenderType = "witness"
+	Client    SenderType = "client"
+)
+
 // Hub defines the methods a PoP server must implement to receive messages
 // and handle clients.
 type Hub interface {
