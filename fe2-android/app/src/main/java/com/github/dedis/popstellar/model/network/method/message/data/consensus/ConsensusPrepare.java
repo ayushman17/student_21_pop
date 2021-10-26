@@ -5,7 +5,7 @@ import com.github.dedis.popstellar.model.network.method.message.data.Data;
 import com.github.dedis.popstellar.model.network.method.message.data.Objects;
 import com.google.gson.annotations.SerializedName;
 
-public final class ConsensusLearn extends Data {
+public final class ConsensusPrepare extends Data {
 
   @SerializedName("message_id")
   private final String messageId;
@@ -14,12 +14,22 @@ public final class ConsensusLearn extends Data {
   private final long creation;
 
   @SerializedName("value")
-  private final LearnValue learnValue;
+  private final PrepareValue prepareValue;
 
-  public ConsensusLearn(String messageId, long creation, boolean decision) {
+  public ConsensusPrepare(String messageId, long creation, int proposedTry) {
     this.messageId = messageId;
     this.creation = creation;
-    this.learnValue = new LearnValue(decision);
+    this.prepareValue = new PrepareValue(proposedTry);
+  }
+
+  @Override
+  public String getObject() {
+    return Objects.CONSENSUS.getObject();
+  }
+
+  @Override
+  public String getAction() {
+    return Action.PREPARE.getAction();
   }
 
   public String getMessageId() {
@@ -30,23 +40,8 @@ public final class ConsensusLearn extends Data {
     return creation;
   }
 
-  public LearnValue getLearnValue() {
-    return learnValue;
-  }
-
-  @Override
-  public String getObject() {
-    return Objects.CONSENSUS.getObject();
-  }
-
-  @Override
-  public String getAction() {
-    return Action.LEARN.getAction();
-  }
-
-  @Override
-  public int hashCode() {
-    return java.util.Objects.hash(messageId, creation, learnValue);
+  public PrepareValue getPrepareValue() {
+    return prepareValue;
   }
 
   @Override
@@ -57,17 +52,22 @@ public final class ConsensusLearn extends Data {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ConsensusLearn that = (ConsensusLearn) o;
+    ConsensusPrepare that = (ConsensusPrepare) o;
 
     return creation == that.creation
         && java.util.Objects.equals(messageId, that.messageId)
-        && java.util.Objects.equals(learnValue, that.learnValue);
+        && java.util.Objects.equals(prepareValue, that.prepareValue);
+  }
+
+  @Override
+  public int hashCode() {
+    return java.util.Objects.hash(messageId, creation, prepareValue);
   }
 
   @Override
   public String toString() {
     return String.format(
-        "ConsensusLearn{message_id='%s', created_at=%s, value=%s}",
-        messageId, creation, learnValue);
+        "ConsensusPrepare{message_id='%s', created_at=%s, value=%s}",
+        messageId, creation, prepareValue);
   }
 }
