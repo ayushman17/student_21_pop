@@ -241,6 +241,24 @@ public class LAORepository {
   }
 
   /**
+   * Returns the public key or null if an error occurred.
+   *
+   * @return the public key
+   */
+  public String getPublicKey() {
+    try {
+      KeysetHandle publicKeysetHandle = mKeysetManager.getKeysetHandle().getPublicKeysetHandle();
+      return Keys.getEncodedKey(publicKeysetHandle);
+    } catch (GeneralSecurityException e) {
+      Log.d(TAG, "failed to get keyset handle: " + e.getMessage());
+      return null;
+    } catch (IOException e) {
+      Log.d(TAG, "failed to get encoded public key: " + e.getMessage());
+      return null;
+    }
+  }
+
+  /**
    * Publish a MessageGeneral containing the given data.
    *
    * @param channel the channel on which the message will be send
