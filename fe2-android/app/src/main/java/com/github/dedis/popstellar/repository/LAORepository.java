@@ -19,6 +19,7 @@ import com.github.dedis.popstellar.model.network.method.Publish;
 import com.github.dedis.popstellar.model.network.method.Subscribe;
 import com.github.dedis.popstellar.model.network.method.Unsubscribe;
 import com.github.dedis.popstellar.model.network.method.message.MessageGeneral;
+import com.github.dedis.popstellar.model.network.method.message.data.Data;
 import com.github.dedis.popstellar.model.network.method.message.data.lao.CreateLao;
 import com.github.dedis.popstellar.model.network.method.message.data.lao.StateLao;
 import com.github.dedis.popstellar.model.network.method.message.data.lao.UpdateLao;
@@ -232,6 +233,29 @@ public class LAORepository {
 
         sendPublish(channel, stateLaoMsg);
       }
+    } catch (GeneralSecurityException e) {
+      Log.d(TAG, "failed to get keyset handle: " + e.getMessage());
+    } catch (IOException e) {
+      Log.d(TAG, "failed to get encoded public key: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Publish a MessageGeneral containing the given data.
+   *
+   * @param channel the channel on which the message will be send
+   * @param data the data to encapsulate in the message
+   */
+  public void sendMessageGeneral(String channel, Data data) {
+    try {
+      KeysetHandle publicKeysetHandle = mKeysetManager.getKeysetHandle().getPublicKeysetHandle();
+      String publicKey = Keys.getEncodedKey(publicKeysetHandle);
+      byte[] sender = Base64.getUrlDecoder().decode(publicKey);
+
+      PublicKeySign signer = mKeysetManager.getKeysetHandle().getPrimitive(PublicKeySign.class);
+      MessageGeneral msg = new MessageGeneral(sender, data, signer, mGson);
+
+      sendPublish(channel, msg);
     } catch (GeneralSecurityException e) {
       Log.d(TAG, "failed to get keyset handle: " + e.getMessage());
     } catch (IOException e) {
