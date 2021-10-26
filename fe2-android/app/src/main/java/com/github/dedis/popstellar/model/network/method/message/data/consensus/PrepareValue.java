@@ -26,6 +26,10 @@ public final class PrepareValue {
     return proposedTry == that.proposedTry;
   }
 
+  public int getProposedTry() {
+    return proposedTry;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(proposedTry);

@@ -1,9 +1,12 @@
 package com.github.dedis.popstellar.model.objects;
 
+import com.github.dedis.popstellar.model.network.method.message.data.consensus.ConsensusAccept;
 import com.github.dedis.popstellar.model.network.method.message.data.consensus.ConsensusKey;
+import com.github.dedis.popstellar.model.network.method.message.data.consensus.ConsensusPromise;
 import com.github.dedis.popstellar.utility.security.Hash;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +29,16 @@ public final class Consensus {
   private final Map<String, String>
       acceptorToMessageId; // map the public key of acceptors to the id of their message
 
+  private int proposedTry;
+  private int promisedTry;
+  private int acceptedTry;
+  private Object acceptedValue;
+  private boolean decided;
+  private Object decision;
+  private Object proposedValue;
+  private Set<ConsensusPromise> promises;
+  private Set<ConsensusAccept> accepts;
+
   public Consensus(long creation, ConsensusKey key, Object value) {
     this.id = generateConsensusId(creation, key.getType(), key.getId(), key.getProperty(), value);
     this.key = key;
@@ -34,6 +47,16 @@ public final class Consensus {
 
     this.isAccepted = false;
     this.acceptorToMessageId = new HashMap<>();
+
+    this.proposedTry = 0;
+    this.promisedTry = -1;
+    this.acceptedTry = -1;
+    this.acceptedValue = null;
+    this.decided = false;
+    this.decision = null;
+    this.proposedValue = null;
+    this.promises = new HashSet<>();
+    this.accepts = new HashSet<>();
   }
 
   public String getMessageId() {
@@ -170,5 +193,69 @@ public final class Consensus {
       long createdAt, String type, String id, String property, Object value) {
     return Hash.hash(
         "consensus", Long.toString(createdAt), type, id, property, String.valueOf(value));
+  }
+
+  public int getProposedTry() {
+    return proposedTry;
+  }
+
+  public void setProposedTry(int proposedTry) {
+    this.proposedTry = proposedTry;
+  }
+
+  public int getPromisedTry() {
+    return promisedTry;
+  }
+
+  public void setPromisedTry(int promisedTry) {
+    this.promisedTry = promisedTry;
+  }
+
+  public int getAcceptedTry() {
+    return acceptedTry;
+  }
+
+  public void setAcceptedTry(int acceptedTry) {
+    this.acceptedTry = acceptedTry;
+  }
+
+  public Object getAcceptedValue() {
+    return acceptedValue;
+  }
+
+  public void setAcceptedValue(Object acceptedValue) {
+    this.acceptedValue = acceptedValue;
+  }
+
+  public boolean isDecided() {
+    return decided;
+  }
+
+  public void setDecided(boolean decided) {
+    this.decided = decided;
+  }
+
+  public Object getDecision() {
+    return decision;
+  }
+
+  public void setDecision(Object decision) {
+    this.decision = decision;
+  }
+
+  public Object getProposedValue() {
+    return proposedValue;
+  }
+
+  public void setProposedValue(Object proposedValue) {
+    this.proposedValue = proposedValue;
+  }
+
+  public Set<ConsensusPromise> getPromises() {
+    return promises;
+  }
+
+  public Set<ConsensusAccept> getAccepts() {
+    return accepts;
   }
 }
