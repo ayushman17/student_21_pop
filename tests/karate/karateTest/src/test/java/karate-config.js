@@ -6,7 +6,7 @@ function fn() {
   }
   var config = {
     env: env,
-	myVarName: 'someValue'
+    serverScript: 'src/test/java/examples/messages/launchServer.sh' //Path start server script
   }
   if (env == 'dev') {
     // customize
