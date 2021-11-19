@@ -4,6 +4,6 @@ Feature: Messages Test
     * def socket = karate.webSocket(ws_url, null)
 
   Scenario: Send Create LAO message
-    * def message = 'lao_create/publish.json'
-    * def expected = 'lao_create/answer.json'
-    * call read('check_answer.feature')
+    Given def message = 'lao_create/publish.json'
+    And def expected = 'lao_create/answer.json'
+    Then call read('send_and_check.feature')
